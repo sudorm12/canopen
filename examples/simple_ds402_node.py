@@ -16,7 +16,7 @@ try:
     network.check()
 
     # Add some nodes with corresponding Object Dictionaries
-    node = canopen.BaseNode402(35, '/home/andre/Code/test/jupiter.eds')
+    node = canopen.BaseNode402(35, 'examples/jupiter/jupiter.eds')
     network.add_node(node)
     # network.add_node(34, '/home/andre/Code/test/jupiter.eds')
     # node = network[34]
