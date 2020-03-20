@@ -121,6 +121,7 @@ class Network(MutableMapping):
                 node.pdo.stop()
         self.notifier.stop()
         self.bus.shutdown()
+        logger.info("Disconnected from '%s'", self.bus.channel_info)
         self.bus = None
         self.check()
 
