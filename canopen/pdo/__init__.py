@@ -2,6 +2,7 @@ from .base import PdoBase, Maps, Map, Variable
 
 import logging
 import itertools
+import struct
 import canopen
 
 logger = logging.getLogger(__name__)
@@ -65,3 +66,19 @@ class TPDO(PdoBase):
                 pdo.stop()
         else:
             raise TypeError('The node type does not support this function.')
+
+    def on_property_write(self, index, data, subindex=None, **kwargs):
+        for npdo, pdo_map in self.map.items():
+            # check if SDO index matches PDO configuration object id
+            pdo_param_index = pdo_map.com_record.od.index
+            if index == pdo_param_index:
+                message_data, = struct.unpack_from("<H", data)
+
+                # subindex 5, event timer
+                if subindex == 5:
+                    if self.node.nmt.state == 'OPERATIONAL':
+                        event_time = message_data / 1000
+                        if event_time == 0:
+                            pdo_map.stop()
+                        else:
+                            pdo_map.start(event_time)
