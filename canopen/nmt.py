@@ -201,6 +201,13 @@ class NmtSlave(NmtBase):
         super(NmtSlave, self).on_command(can_id, data, timestamp)
         self.update_heartbeat()
 
+        # Regular PDO transmission should start in OPERATIONAL
+        # and be disabled in all other states
+        if self._state == 5:
+            self._local_node.tpdo.start_all()
+        else:
+            self._local_node.tpdo.stop()
+
     def send_command(self, code):
         """Send an NMT command code to the node.
 
@@ -221,6 +228,13 @@ class NmtSlave(NmtBase):
             self.start_heartbeat(heartbeat_time_ms)
         else:
             self.update_heartbeat()
+
+        # Regular PDO transmission should start in OPERATIONAL
+        # and be disabled in all other states
+        if self._state == 5:
+            self._local_node.tpdo.start_all()
+        else:
+            self._local_node.tpdo.stop()
 
     def on_write(self, index, data, **kwargs):
         if index == 0x1017:

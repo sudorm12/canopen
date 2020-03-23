@@ -61,9 +61,18 @@ class TPDO(PdoBase):
         """Stop transmission of all TPDOs.
         :raise TypeError: Exception is thrown if the node associated with the PDO does not
         support this function"""
-        if isinstance(canopen.LocalNode, self.node):
+        if isinstance(self.node, canopen.LocalNode):
+            logging.debug('Stopping all PDOs')
             for pdo in self.map.values():
                 pdo.stop()
+        else:
+            raise TypeError('The node type does not support this function.')
+
+    def start_all(self):
+        if isinstance(self.node, canopen.LocalNode):
+            logging.debug('Starting all PDOs')
+            for npdo, pdo_map in self.map.items():
+                pdo_map.start()
         else:
             raise TypeError('The node type does not support this function.')
 
@@ -76,9 +85,12 @@ class TPDO(PdoBase):
 
                 # subindex 5, event timer
                 if subindex == 5:
+                    period = message_data / 1000
+                    pdo_map.period = period
+
+                    # start PDO timer if already in operational
                     if self.node.nmt.state == 'OPERATIONAL':
-                        event_time = message_data / 1000
-                        if event_time == 0:
+                        if period == 0:
                             pdo_map.stop()
                         else:
-                            pdo_map.start(event_time)
+                            pdo_map.start(period)

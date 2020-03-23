@@ -24,18 +24,12 @@ class BaseNode401(LocalNode):
         self.rpdo_pointers = dict()  # { index: RPDO_pointer }
         self.add_write_callback(self.tpdo.on_property_write)
 
-    def setup_402_state_machine(self):
-        """Configure the state machine by searching for a TPDO that has the
-        StatusWord mapped.
-        :raise ValueError: If the the node can't find a Statusword configured
-        in the any of the TPDOs
+    def start_node(self):
+        """This function needs to be called after connecting to the network.
+        It will set up the PDO configuration and set NMT state to pre-op.
         """
-        self.nmt.state = 'PRE-OPERATIONAL' # Why is this necessary?
         self.setup_pdos()
-        self._check_controlword_configured()
-        self._check_statusword_configured()
-        self.nmt.state = 'OPERATIONAL'
-        self.state = 'SWITCH ON DISABLED' # Why change state?
+        self.nmt.state = 'PRE-OPERATIONAL'
 
     def setup_pdos(self):
         self.pdo.read()  # TPDO and RPDO configurations
