@@ -495,6 +495,29 @@ DefaultValue=255
 LowLimit=0
 HighLimit=255
 
+[1800sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[1800sub4]
+ParameterName=Compatibility Entry
+ObjectType=0x7
+DataType=0x0005
+AccessType=rw
+PDOMapping=0
+
+[1800sub5]
+ParameterName=Event Timer
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
 [1801]
 ParameterName=Transmit PDO 1 communication parameters
 ObjectType=9
@@ -527,6 +550,29 @@ PDOMapping=0
 DefaultValue=255
 LowLimit=0
 HighLimit=255
+
+[1801sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[1801sub4]
+ParameterName=Compatibility Entry
+ObjectType=0x7
+DataType=0x0005
+AccessType=rw
+PDOMapping=0
+
+[1801sub5]
+ParameterName=Event Timer
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
 
 [1802]
 ParameterName=Transmit PDO 2 communication parameters
@@ -561,6 +607,29 @@ DefaultValue=0
 LowLimit=0
 HighLimit=255
 
+[1802sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[1802sub4]
+ParameterName=Compatibility Entry
+ObjectType=0x7
+DataType=0x0005
+AccessType=rw
+PDOMapping=0
+
+[1802sub5]
+ParameterName=Event Timer
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
+
 [1803]
 ParameterName=Transmit PDO 3 communication parameters
 ObjectType=9
@@ -593,6 +662,29 @@ PDOMapping=0
 DefaultValue=0
 LowLimit=0
 HighLimit=255
+
+[1803sub3]
+ParameterName=Inhibit Time
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
+PDOMapping=0
+
+[1803sub4]
+ParameterName=Compatibility Entry
+ObjectType=0x7
+DataType=0x0005
+AccessType=rw
+PDOMapping=0
+
+[1803sub5]
+ParameterName=Event Timer
+ObjectType=0x7
+DataType=0x0006
+AccessType=rw
+DefaultValue=0
+PDOMapping=0
 
 [1a00]
 ParameterName=Transmit PDO 0 mapping parameter
