@@ -70,9 +70,10 @@ class TPDO(PdoBase):
 
     def start_all(self):
         if isinstance(self.node, canopen.LocalNode):
-            logging.debug('Starting all PDOs')
+            logging.debug('Starting all periodic PDOs')
             for npdo, pdo_map in self.map.items():
-                pdo_map.start()
+                if pdo_map.trans_type >= 254:
+                    pdo_map.start()
         else:
             raise TypeError('The node type does not support this function.')
 
@@ -86,7 +87,7 @@ class TPDO(PdoBase):
                 # subindex 5, event timer
                 if subindex == 5:
                     period = message_data / 1000
-                    pdo_map.period = period
+                    pdo_map.event_timer = period
 
                     # start PDO timer if already in operational
                     if self.node.nmt.state == 'OPERATIONAL':

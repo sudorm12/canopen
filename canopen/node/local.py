@@ -29,6 +29,8 @@ class LocalNode(BaseNode):
         self.add_write_callback(self.nmt.on_write)
         self.emcy = EmcyProducer(0x80 + self.id)
 
+        self.pdo.read()
+
     def associate_network(self, network):
         self.network = network
         self.sdo.network = network
@@ -38,6 +40,9 @@ class LocalNode(BaseNode):
         self.emcy.network = network
         network.subscribe(self.sdo.rx_cobid, self.sdo.on_request)
         network.subscribe(0, self.nmt.on_command)
+
+        for pdo_map in self.pdo.map.values():
+            pdo_map.subscribe_to_network(network)
 
     def remove_network(self):
         self.network.unsubscribe(self.sdo.rx_cobid, self.sdo.on_request)

@@ -331,8 +331,12 @@ class Map(object):
             if index and size:
                 self.add_variable(index, subindex, size)
 
-        if self.enabled:
-            self.pdo_node.network.subscribe(self.cob_id, self.on_message)
+        if self.enabled and self.pdo_node.network is not None:
+            self.subscribe_to_network(self.pdo_node.network)
+
+    def subscribe_to_network(self, network):
+        if self.enabled and self.cob_id is not None:
+            network.subscribe(self.cob_id, self.on_message)
 
     def save(self):
         """Save PDO configuration for this map using SDO."""
@@ -442,9 +446,15 @@ class Map(object):
         """
         if period is not None:
             self.period = period
+        elif self.event_timer is not None:
+            self.period = self.event_timer
+        else:
+            raise ValueError("A valid transmission period or event time has not been given")
 
-        if not self.period:
-            raise ValueError("A valid transmission period has not been given")
+        if self.period == 0:
+            logging.debug("PDO %s has event time 0 seconds and will not be sent periodically", self.name)
+            return
+
         logger.info("Starting %s with a period of %s seconds", self.name, self.period)
 
         self._task = self.pdo_node.network.send_periodic(
