@@ -90,7 +90,7 @@ class TPDO(PdoBase):
                     pdo_map.event_timer = period
 
                     # start PDO timer if already in operational
-                    if self.node.nmt.state == 'OPERATIONAL':
+                    if self.node.nmt.state == 'OPERATIONAL' and pdo_map.trans_type >= 254:
                         if period == 0:
                             pdo_map.stop()
                         else:
