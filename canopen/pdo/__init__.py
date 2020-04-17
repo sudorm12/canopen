@@ -86,8 +86,15 @@ class TPDO(PdoBase):
 
                 # subindex 5, event timer
                 if subindex == 5:
-                    period = message_data / 1000
-                    pdo_map.event_timer = period
+                    # period = message_data / 1000
+                    # pdo_map.event_timer = period
+                    #
+                    # the event_timer is in ms while the period is in seconds. (see line 167 of pdo/base.py)
+                    # populate the event_timer with the time in in ms and then convert to seconds for
+                    # use as the period.
+                    #
+                    pdo_map.event_timer = message_data
+                    period = pdo_map.event_timer / 1000
 
                     # start PDO timer if already in operational
                     if self.node.nmt.state == 'OPERATIONAL' and pdo_map.trans_type >= 254:

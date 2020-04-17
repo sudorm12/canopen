@@ -447,7 +447,7 @@ class Map(object):
         if period is not None:
             self.period = period
         elif self.event_timer is not None:
-            self.period = self.event_timer
+            self.period = self.event_timer / 1000
         else:
             raise ValueError("A valid transmission period or event time has not been given")
 
