@@ -6,7 +6,7 @@ import time
 
 # logging.basicConfig(level=logging.DEBUG)
 
-EDS_PATH = os.path.join(os.path.dirname(__file__), 'sample.eds')
+EDS_PATH = os.path.join(os.path.dirname(__file__), 'widget.eds')
 
 
 class TestSDO(unittest.TestCase):
@@ -254,6 +254,17 @@ class TestPDO(unittest.TestCase):
         self.remote_node.pdo.save()
         self.local_node.pdo.save()
 
+    # TODO: test changing pdo transmission type
+
+    # TODO: test changing pdo transmission event time
+
+    # TODO: send rxpdos and ensure data dictionary entries are updated
+
+    # TODO: change rxpdo configuration and ensure correct data dictionary entries are updated
+
+    # TODO: update data dictionary entries via sdo and ensure txpdos update correctly
+
+    # TODO: change txpdo configuration end ensure txpdos send updated values
 
 if __name__ == "__main__":
     unittest.main()
