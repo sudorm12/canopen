@@ -222,6 +222,7 @@ class TestNMT(unittest.TestCase):
 
         self.local_node.nmt.stop_heartbeat()
 
+
 class TestPDO(unittest.TestCase):
     """
     Test PDO slave.
@@ -229,6 +230,8 @@ class TestPDO(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
         cls.network1 = canopen.Network()
         cls.network1.connect("test", bustype="virtual")
         cls.remote_node = cls.network1.add_node(2, EDS_PATH)
@@ -254,17 +257,57 @@ class TestPDO(unittest.TestCase):
         self.remote_node.pdo.save()
         self.local_node.pdo.save()
 
-    # TODO: test changing pdo transmission type
+    def test_rpdo_configuration(self):
+        # TODO: are there any RPDO confugration parameters which should be tested?
+        pass
 
-    # TODO: test changing pdo transmission event time
+    def test_rpdo_mapping(self):
+        # TODO: change RPDO mapping and ensure correct object dictionary entries are updated
+        pass
 
-    # TODO: send rxpdos and ensure data dictionary entries are updated
+    def test_rpdo_updates_sdo(self):
+        # send rxpdos and ensure object dictionary entries are updated
+        self.remote_node.pdo.read()
 
-    # TODO: change rxpdo configuration and ensure correct data dictionary entries are updated
+        self.remote_node.rpdo[1][0].raw = 0x67
+        self.remote_node.rpdo[1][1].raw = 0x89
 
-    # TODO: update data dictionary entries via sdo and ensure txpdos update correctly
+        self.remote_node.rpdo[1].transmit()
 
-    # TODO: change txpdo configuration end ensure txpdos send updated values
+        time.sleep(0.1)
+
+        # TODO: this test fails because the PDO object does not save received values to the od
+        self.assertEqual(self.local_node.sdo[0x2013].raw, 0x67)
+        self.assertEqual(self.local_node.sdo[0x2010].raw, 0x89)
+        self.assertEqual(self.remote_node.sdo[0x2013].raw, 0x67)
+        self.assertEqual(self.remote_node.sdo[0x2010].raw, 0x89)
+
+    def test_tpdo_configuration(self):
+        # TODO: test changing PDO transmission type
+        # TODO: test changing PDO transmission event time
+        pass
+
+    def test_tpdo_mapping(self):
+        # TODO: change TPDO configuration end ensure txpdos send updated values
+        pass
+
+    def test_sdo_updates_tpdo(self):
+        # update object dictionary entries via SDO and ensure TPDOs update correctly
+        self.remote_node.sdo[0x2033].raw = 0x12
+        self.remote_node.sdo[0x2030].raw = 0x34
+
+        self.remote_node.sdo[0x1800][2].raw = 0xFF
+        self.remote_node.sdo[0x1800][5].raw = 100
+
+        time.sleep(0.1)
+
+        self.remote_node.nmt.state = 'OPERATIONAL'
+
+        time.sleep(0.2)
+
+        # TODO: this test fails because the PDO object does not load data from the od
+        self.assertEqual(self.remote_node.tpdo[1].data, bytearray([0x12, 0, 0, 0, 0x34, 0, 0, 0]))
+
 
 if __name__ == "__main__":
     unittest.main()

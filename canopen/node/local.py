@@ -27,6 +27,9 @@ class LocalNode(BaseNode):
         self.nmt = NmtSlave(self.id, self)
         # Let self.nmt handle writes for 0x1017
         self.add_write_callback(self.nmt.on_write)
+        self.add_write_callback(self.tpdo.on_property_write)
+        self.add_write_callback(self.tpdo.on_mapping_write)
+        self.add_write_callback(self.tpdo.on_data_write)
         self.emcy = EmcyProducer(0x80 + self.id)
 
         self.pdo.read()
@@ -93,13 +96,13 @@ class LocalNode(BaseNode):
         if check_writable and not obj.writable:
             raise SdoAbortedError(0x06010002)
 
-        # Try callbacks
-        for callback in self._write_callbacks:
-            callback(index=index, subindex=subindex, od=obj, data=data)
-
         # Store data
         self.data_store.setdefault(index, {})
         self.data_store[index][subindex] = bytes(data)
+
+        # Try callbacks
+        for callback in self._write_callbacks:
+            callback(index=index, subindex=subindex, od=obj, data=data)
 
     def _find_object(self, index, subindex):
         if index not in self.object_dictionary:

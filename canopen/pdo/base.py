@@ -286,6 +286,13 @@ class Map(object):
 
     def read(self):
         """Read PDO configuration for this map using SDO."""
+        self.read_config()
+        self.read_mapping()
+
+        if self.enabled and self.pdo_node.network is not None:
+            self.subscribe_to_network(self.pdo_node.network)
+
+    def read_config(self):
         cob_id = self.com_record[1].raw
         self.cob_id = cob_id & 0x1FFFFFFF
         logger.info("COB-ID is 0x%X", self.cob_id)
@@ -317,6 +324,7 @@ class Map(object):
             else:
                 logger.info("SYNC start value is set to %d ms", self.sync_start_value)
 
+    def read_mapping(self):
         self.clear()
         nof_entries = self.map_array[0].raw
         for subindex in range(1, nof_entries + 1):
@@ -330,9 +338,6 @@ class Map(object):
                 size = (value >> 24) & 0xFF
             if index and size:
                 self.add_variable(index, subindex, size)
-
-        if self.enabled and self.pdo_node.network is not None:
-            self.subscribe_to_network(self.pdo_node.network)
 
     def subscribe_to_network(self, network):
         if self.enabled and self.cob_id is not None:

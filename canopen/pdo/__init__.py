@@ -62,7 +62,7 @@ class TPDO(PdoBase):
         :raise TypeError: Exception is thrown if the node associated with the PDO does not
         support this function"""
         if isinstance(self.node, canopen.LocalNode):
-            logging.debug('Stopping all PDOs')
+            logging.debug('Stopping all TPDOs')
             for pdo in self.map.values():
                 pdo.stop()
         else:
@@ -70,7 +70,7 @@ class TPDO(PdoBase):
 
     def start_all(self):
         if isinstance(self.node, canopen.LocalNode):
-            logging.debug('Starting all periodic PDOs')
+            logging.debug('Starting all TPDOs')
             for npdo, pdo_map in self.map.items():
                 if pdo_map.trans_type >= 254:
                     pdo_map.start()
@@ -82,23 +82,30 @@ class TPDO(PdoBase):
             # check if SDO index matches PDO configuration object id
             pdo_param_index = pdo_map.com_record.od.index
             if index == pdo_param_index:
-                message_data, = struct.unpack_from("<H", data)
+                # read updated configuration from object dictionary
+                pdo_map.read_config()
+                logging.debug('Updating configuration for TPDO{}'.format(npdo))
 
-                # subindex 5, event timer
-                if subindex == 5:
-                    # period = message_data / 1000
-                    # pdo_map.event_timer = period
-                    #
-                    # the event_timer is in ms while the period is in seconds. (see line 167 of pdo/base.py)
-                    # populate the event_timer with the time in in ms and then convert to seconds for
-                    # use as the period.
-                    #
-                    pdo_map.event_timer = message_data
-                    period = pdo_map.event_timer / 1000
+                # start PDOs if node is operational and transmission type is 254 or 255
+                if self.node.nmt.state == 'OPERATIONAL' and pdo_map.trans_type >= 254:
+                    pdo_map.start()
 
-                    # start PDO timer if already in operational
-                    if self.node.nmt.state == 'OPERATIONAL' and pdo_map.trans_type >= 254:
-                        if period == 0:
-                            pdo_map.stop()
-                        else:
-                            pdo_map.start(period)
+    def on_mapping_write(self, index, data, subindex=None, **kwargs):
+        for npdo, pdo_map in self.map.items():
+            # check if SDO index matches PDO mapping object id
+            pdo_map_index = pdo_map.map_array.od.index
+            if index == pdo_map_index:
+                # read updated mapping from object dictionary
+                pdo_map.read_mapping()
+                logging.debug('Updating mapping for TPDO{}'.format(npdo))
+
+                # update PDO data
+                pdo_map.update()
+
+    def on_data_write(self, index, data, subindex=None, **kwargs):
+        for npdo, pdo_map in self.map.items():
+            # check if mapped variable was updated
+            if index in [var.index for var in pdo_map]:
+                # update PDO data
+                pdo_map.update()
+                logging.debug('Updating data for TPDO{}'.format(npdo))
