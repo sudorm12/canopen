@@ -104,8 +104,9 @@ class TPDO(PdoBase):
 
     def on_data_write(self, index, data, subindex=None, **kwargs):
         for npdo, pdo_map in self.map.items():
-            # check if mapped variable was updated
-            if index in [var.index for var in pdo_map]:
-                # update PDO data
-                pdo_map.update()
-                logging.debug('Updating data for TPDO{}'.format(npdo))
+            # check if a mapped variable was updated
+            for var in pdo_map:
+                if index == var.index:
+                    # update PDO data
+                    var.set_data(data)
+                    logging.debug('Updating data for TPDO{}'.format(npdo))

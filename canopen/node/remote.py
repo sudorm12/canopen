@@ -56,6 +56,9 @@ class RemoteNode(BaseNode):
         network.subscribe(0x80 + self.id, self.emcy.on_emcy)
         network.subscribe(0, self.nmt.on_command)
 
+        for pdo_map in self.pdo.map.values():
+            pdo_map.subscribe_to_network(network)
+
     def remove_network(self):
         for sdo in self.sdo_channels:
             self.network.unsubscribe(sdo.tx_cobid, sdo.on_response)
