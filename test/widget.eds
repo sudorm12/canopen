@@ -2,10 +2,10 @@
 CreatedBy=SMT
 ModifiedBy=SMT
 Description=Generic widget
-CreationTime=11:19AM
-CreationDate=04-20-2020
-ModificationTime=11:19AM
-ModificationDate=04-20-2020
+CreationTime=10:33AM
+CreationDate=05-26-2020
+ModificationTime=10:33AM
+ModificationDate=05-26-2020
 FileName=widget.eds
 FileVersion=0
 FileRevision=0
@@ -3377,7 +3377,7 @@ PDOMapping=0
 ParameterName=UINT32 RWW Object
 ObjectType=0x7
 DataType=0x0007
-AccessType=wo
+AccessType=rww
 DefaultValue=0
 PDOMapping=1
 
@@ -3385,7 +3385,7 @@ PDOMapping=1
 ParameterName=UINT16 RWW Object
 ObjectType=0x7
 DataType=0x0006
-AccessType=wo
+AccessType=rww
 DefaultValue=0
 PDOMapping=1
 
@@ -3393,7 +3393,7 @@ PDOMapping=1
 ParameterName=UINT8 RWW Object
 ObjectType=0x7
 DataType=0x0005
-AccessType=wo
+AccessType=rww
 DefaultValue=0
 PDOMapping=1
 
@@ -3409,7 +3409,7 @@ PDOMapping=1
 ParameterName=INT16 RWW Object
 ObjectType=0x7
 DataType=0x0003
-AccessType=wo
+AccessType=rww
 DefaultValue=0
 PDOMapping=1
 
@@ -3417,7 +3417,7 @@ PDOMapping=1
 ParameterName=INT8 RWW Object
 ObjectType=0x7
 DataType=0x0002
-AccessType=wo
+AccessType=rww
 DefaultValue=0
 PDOMapping=1
 
@@ -3432,14 +3432,14 @@ PDOMapping=0
 ParameterName=UINT32 RWR Object
 ObjectType=0x7
 DataType=0x0007
-AccessType=ro
+AccessType=rwr
 PDOMapping=1
 
 [2031]
 ParameterName=UINT16 RWR Object
 ObjectType=0x7
 DataType=0x0006
-AccessType=ro
+AccessType=rwr
 DefaultValue=0
 PDOMapping=1
 
@@ -3447,7 +3447,7 @@ PDOMapping=1
 ParameterName=UINT8 RWR Object
 ObjectType=0x7
 DataType=0x0005
-AccessType=ro
+AccessType=rwr
 DefaultValue=0
 PDOMapping=1
 
@@ -3463,7 +3463,7 @@ PDOMapping=1
 ParameterName=INT16 RWR Object
 ObjectType=0x7
 DataType=0x0003
-AccessType=ro
+AccessType=rwr
 DefaultValue=0
 PDOMapping=1
 
@@ -3471,7 +3471,7 @@ PDOMapping=1
 ParameterName=INT8 RWR Object
 ObjectType=0x7
 DataType=0x0002
-AccessType=ro
+AccessType=rwr
 DefaultValue=0
 PDOMapping=1
 

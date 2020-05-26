@@ -31,6 +31,8 @@ class LocalNode(BaseNode):
         self.add_write_callback(self.tpdo.on_mapping_write)
         self.add_write_callback(self.tpdo.on_data_write)
         self.emcy = EmcyProducer(0x80 + self.id)
+        for pdo_map in self.rpdo.values():
+            pdo_map.add_callback(update_sdo_from_pdo)
 
         self.pdo.read()
 
@@ -116,3 +118,12 @@ class LocalNode(BaseNode):
                 raise SdoAbortedError(0x06090011)
             obj = obj[subindex]
         return obj
+
+
+def update_sdo_from_pdo(map):
+    for var in map:
+        # var.raw = var.get_data()
+        if var.subindex == 0:
+            map.pdo_node.node.sdo[var.index].raw = var.raw
+        else:
+            map.pdo_node.node.sdo[var.index][var.subindex].raw = var.raw

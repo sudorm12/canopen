@@ -279,7 +279,6 @@ class TestPDO(unittest.TestCase):
 
         time.sleep(0.1)
 
-        # TODO: this test fails because the PDO object does not save received values to the od
         self.assertEqual(self.local_node.sdo[0x2013].raw, 0x67)
         self.assertEqual(self.local_node.sdo[0x2010].raw, 0x89)
         self.assertEqual(self.remote_node.sdo[0x2013].raw, 0x67)
