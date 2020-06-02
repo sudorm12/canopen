@@ -290,8 +290,26 @@ class TestPDO(unittest.TestCase):
         pass
 
     def test_tpdo_mapping(self):
-        # TODO: change TPDO configuration end ensure txpdos send updated values
-        pass
+        self.remote_node.pdo.read()
+
+        # change TPDO configuration end ensure txpdos send updated values
+        self.remote_node.sdo[0x2033].raw = 0x1234
+        self.remote_node.sdo[0x2030].raw = 0xABCD
+
+        self.remote_node.sdo[0x1A01][1].raw = 0x20330020
+        self.remote_node.sdo[0x1A01][2].raw = 0x20300020
+
+        self.remote_node.sdo[0x1801][2].raw = 0xFF
+        self.remote_node.sdo[0x1801][5].raw = 100
+
+        time.sleep(0.1)
+
+        self.remote_node.nmt.state = 'OPERATIONAL'
+
+        time.sleep(0.5)
+
+        self.assertEqual(self.local_node.tpdo[2].data, bytearray([0x34, 0x12, 0, 0, 0xCD, 0xAB, 0, 0]))
+        self.assertEqual(self.remote_node.tpdo[2].data, bytearray([0x34, 0x12, 0, 0, 0xCD, 0xAB, 0, 0]))
 
     def test_sdo_updates_tpdo(self):
         self.remote_node.pdo.read()

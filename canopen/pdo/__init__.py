@@ -95,9 +95,18 @@ class TPDO(PdoBase):
             # check if SDO index matches PDO mapping object id
             pdo_map_index = pdo_map.map_array.od.index
             if index == pdo_map_index:
+                logging.debug('Updating mapping for TPDO{}'.format(npdo))
+
                 # read updated mapping from object dictionary
                 pdo_map.read_mapping()
-                logging.debug('Updating mapping for TPDO{}'.format(npdo))
+
+                # use mapped SDO variable to set PDO variable data
+                for var in pdo_map:
+                    if var.od.subindex == 0:
+                        sdo_data = self.node.sdo[var.od.index].data
+                    else:
+                        sdo_data = self.node.sdo[var.od.index][var.od.subindex].data
+                    var.set_data(sdo_data)
 
                 # update PDO data
                 pdo_map.update()
