@@ -285,9 +285,19 @@ class TestPDO(unittest.TestCase):
         self.assertEqual(self.remote_node.sdo[0x2010].raw, 0x89)
 
     def test_tpdo_configuration(self):
+        self.remote_node.pdo.read()
+
+        self.remote_node.sdo[0x1801][2].raw = 0xFF
+        self.remote_node.sdo[0x1801][5].raw = 100
+
         # TODO: test changing PDO transmission type
+
         # TODO: test changing PDO transmission event time
-        pass
+        self.remote_node.sdo[0x1801][5].raw = 100
+
+        time.sleep(0.5)
+
+        logging.debug(self.remote_node.tpdo[2].period)
 
     def test_tpdo_mapping(self):
         self.remote_node.pdo.read()

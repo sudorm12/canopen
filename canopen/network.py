@@ -331,6 +331,7 @@ class MessageListener(Listener):
 
     def on_message_received(self, msg):
         if msg.is_error_frame or msg.is_remote_frame:
+            # TODO: add support for local node remote frames
             return
 
         try:
