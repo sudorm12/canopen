@@ -308,7 +308,7 @@ class Map(object):
             except (KeyError, SdoAbortedError) as e:
                 logger.info("Could not read inhibit time (%s)", e)
             else:
-                logger.info("Inhibit time is set to %d ms", self.inhibit_time)
+                logger.info("Inhibit time is set to %d us", (self.inhibit_time * 100))
 
             try:
                 self.event_timer = self.com_record[5].raw
