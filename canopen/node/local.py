@@ -34,7 +34,17 @@ class LocalNode(BaseNode):
         for pdo_map in self.rpdo.values():
             pdo_map.add_callback(update_sdo_from_pdo)
 
+        # read the pdo configuration and mapping
         self.pdo.read()
+
+        # read tpdo data values from data dictionary
+        for npdo, pdo_map in self.tpdo.items():
+            for var in pdo_map:
+                if var.od.subindex == 0:
+                    sdo_data = self.sdo[var.od.index].data
+                else:
+                    sdo_data = self.sdo[var.od.index][var.od.subindex].data
+                var.set_data(sdo_data)
 
     def associate_network(self, network):
         self.network = network
@@ -87,6 +97,8 @@ class LocalNode(BaseNode):
             # Try default value
             if obj.default is not None:
                 return obj.encode_raw(obj.default)
+            # if no value or default is available, just use zero
+            return obj.encode_raw(0)
 
         # Resource not available
         logger.info("Resource unavailable for 0x%X:%d", index, subindex)
